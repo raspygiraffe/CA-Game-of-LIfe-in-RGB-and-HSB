@@ -1,0 +1,55 @@
+// the Game of Life 
+
+GOL gol;
+  float scaleValue = 1.0; // initial scale value
+  boolean zoomIn = false; // flag to indicate if zoom in is in progress
+
+int numKeyPresses = 0;
+
+void setup() {
+  size(640, 640);
+
+  colorMode(RGB, 255);
+  frameRate(24);
+  gol = new GOL();
+}
+
+void draw() {
+  background(255); 
+  gol.generate(); 
+  gol.display();
+  
+    //if (keyPressed && key == ' ') {
+    //  colorMode(HSB, 360); // change to HSB color mode
+    //  }
+    
+    if (zoomIn) {
+    // increase scale value by 0.05 per frame for 2 seconds
+    gol.w++; 
+    if (frameRate % 3 == 0) { // after 2 seconds
+    gol.w--;
+    }
+  } else {
+    // decrease scale value by 0.05 per frame
+    gol.w += 0.5;
+    if (gol.w <= 1.0) { // reset scale value after zoom out
+      gol.w = 1;
+    }
+  }
+}
+
+void mousePressed(){
+  gol.init();
+  rotate(PI/1.0);
+}
+
+void keyPressed() {
+  numKeyPresses++;
+  if (numKeyPresses % 2 == 0) { // check if key was pressed an even amount of times
+    colorMode(HSB, 360, 300, 240); // change to HSB color mode
+     rotate(PI/1.0);
+  } else {
+    colorMode(RGB, 255); // change back to RGB color mode
+     rotate(PI/3.0);
+  }
+}
