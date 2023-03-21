@@ -1,0 +1,80 @@
+class GOL {
+  int w = 8; 
+  int columns, rows; 
+  
+  //Make the board 
+  int [] [] board; 
+  
+  GOL() {
+    //Set up boards and widths
+    columns = width/w; 
+    rows = height/w; 
+    board = new int[columns][rows]; 
+    
+    //Fill with random 0 or 1 values 
+    init();
+  }
+  void init(){
+    for (int i = 1; i < columns - 1; i++){
+      for (int j = 1; j < rows - 1; j++){
+        board[i][j] = int(random(2));
+      }
+    }
+  }
+  //The next generation of the human races!!!
+  void generate() {
+    int [][] next = new int[columns][rows]; 
+    
+    //Loop through  2D spots 
+    for (int x = 1; x < columns - 1; x++){
+      for (int y = 1; y < rows - 1; y++ ){
+        
+        //check all states from the surrounding grids
+        int neighbors = 0; 
+        for (int i = -1; i <= 1; i++){
+          for (int j = -1; j <= 1; j++){
+            neighbors += board[x+i][y+j];
+        }       
+      }
+             // A little trick to subtract the current cell's state since
+        // we added it in the above loop
+        neighbors -= board[x][y];
+
+        // Rules of Life
+        
+        // Loneliness
+        if      ((board[x][y] == 1) && (neighbors <  2)) next[x][y] = 0;  
+        
+        // Overpopulation
+        else if ((board[x][y] == 1) && (neighbors >  3)) next[x][y] = 0;
+        
+        // Reproduction
+        else if ((board[x][y] == 0) && (neighbors == 3)) next[x][y] = 1;   
+        
+        //Mutation
+        else if ((neighbors == 3) && (neighbors == 1))    next[x][y] = 1;
+
+        // Stasis
+        else  next[x][y] = board[x][y];
+      }
+    }
+    board = next;
+
+      }
+      //fill according to the binary (one for 0 and one for 1)
+  void display() {
+    for ( int i = 0; i < columns;i++) {
+      for ( int j = 0; j < rows;j++) {
+        if ((board[i][j] == 1)) fill(random(8, 16), random(111, 333), 0, 255);
+        else fill(random(32),random(75),random(150), 222);
+        pixelDensity(1);
+        stroke(1);
+        rect(i*w, j*w, w, w);
+        //circle(i*w, j*w, random(w));
+      }
+      
+    }
+    
+  } 
+  
+} 
